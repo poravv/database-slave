@@ -1,0 +1,12 @@
+[mysqld]
+innodb_strict_mode
+innodb_file_per_table           = ON
+# Need binlogging for PITR and for a slave
+# Server ID needs to be unique per cluster.
+# If these four clients are all separate it's fine to have the same
+server-id                       = 3
+log_bin                         = /var/lib/mysql/mysql-bin.log
+binlog_format                   = row
+max_binlog_size                 = 100M
+expire_logs_days                = 5
+relay-log                       = mysql-slave

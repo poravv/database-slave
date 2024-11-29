@@ -1,0 +1,103 @@
+version: '3.8'
+services:
+  client1:
+    build:
+      context: .
+      dockerfile: Dockerfile.client1
+    env_file:
+      - .env
+    environment:
+      - MARIADB_ROOT_PASSWORD=${ROOT_PASSWORD}
+      - MARIADB_DATABASE=dbtest
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${CLIENT1_PASSWORD}
+    volumes:
+      - client1-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3333:3306"
+    networks:
+      mysql_slaves:
+        aliases:
+          - client1
+    hostname: client1
+    restart: unless-stopped
+
+  client2:
+    build:
+      context: .
+      dockerfile: Dockerfile.client2
+    env_file:
+      - .env
+    environment:
+      - MARIADB_ROOT_PASSWORD=${ROOT_PASSWORD}
+      - MARIADB_DATABASE=dbtest
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${CLIENT2_PASSWORD}
+    volumes:
+      - client2-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3334:3306"
+    networks:
+      mysql_slaves:
+        aliases:
+          - client2
+    hostname: client2
+    restart: unless-stopped
+
+  client3:
+    build:
+      context: .
+      dockerfile: Dockerfile.client3
+    env_file:
+      - .env
+    environment:
+      - MARIADB_ROOT_PASSWORD=${ROOT_PASSWORD}
+      - MARIADB_DATABASE=dbtest
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${CLIENT3_PASSWORD}
+    volumes:
+      - client3-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3335:3306"
+    networks:
+      mysql_slaves:
+        aliases:
+          - client3
+    hostname: client3
+    restart: unless-stopped
+
+  client4:
+    build:
+      context: .
+      dockerfile: Dockerfile.client4
+    env_file:
+      - .env
+    environment:
+      - MARIADB_ROOT_PASSWORD=${ROOT_PASSWORD}
+      - MARIADB_DATABASE=dbtest
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${CLIENT4_PASSWORD}
+    volumes:
+      - client4-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3336:3306"
+    networks:
+      mysql_slaves:
+        aliases:
+          - client4
+    hostname: client4
+    restart: unless-stopped
+
+volumes:
+  client1-data:
+  client2-data:
+  client3-data:
+  client4-data:
+
+networks:
+  mysql_slaves:
+    driver: bridge

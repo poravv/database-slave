@@ -1,0 +1,5 @@
+FROM mariadb:latest
+
+# Copia el archivo de configuración de MySQL con el server_id asignado
+COPY my2.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+

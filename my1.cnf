@@ -1,0 +1,12 @@
+[mysqld]
+innodb_strict_mode = 1
+innodb_file_per_table = ON
+
+# Configuración de replicación para el servidor maestro
+server-id = 1  # Este debe ser único y debe ser diferente a los servidores esclavos
+log_bin = /var/lib/mysql/mysql-bin.log
+binlog_format = row
+max_binlog_size = 100M
+expire_logs_days = 5
+
+# Otras configuraciones de replicación que puedas necesitar
