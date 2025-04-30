@@ -1,12 +1,37 @@
 [mysqld]
-innodb_strict_mode
-innodb_file_per_table           = ON
-# Need binlogging for PITR and for a slave
-# Server ID needs to be unique per cluster.
-# If these four clients are all separate it's fine to have the same
-server-id                       = 3
-log_bin                         = /var/lib/mysql/mysql-bin.log
-binlog_format                   = row
-max_binlog_size                 = 100M
-expire_logs_days                = 5
-relay-log                       = mysql-slave
+# Configuración general de rendimiento
+innodb_buffer_pool_size = 1G
+innodb_log_file_size = 256M
+innodb_flush_log_at_trx_commit = 1
+innodb_flush_method = O_DIRECT
+innodb_strict_mode = 1
+innodb_file_per_table = ON
+max_connections = 500
+thread_cache_size = 128
+
+# Configuración de replicación para el servidor esclavo
+server-id = 3
+log_bin = /var/lib/mysql/mysql-bin.log
+binlog_format = ROW
+max_binlog_size = 100M
+expire_logs_days = 5
+relay-log = /var/lib/mysql/mysql-relay-bin
+relay-log-index = /var/lib/mysql/mysql-relay-bin.index
+read_only = ON
+skip-slave-start
+report-host = client3
+report-port = 3306
+
+# Seguridad
+symbolic-links = 0
+local_infile = 0
+
+# Configuración de caracteres
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+# Logging
+log_error = /var/lib/mysql/error.log
+slow_query_log = 1
+slow_query_log_file = /var/lib/mysql/slow-queries.log
+long_query_time = 2

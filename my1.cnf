@@ -1,12 +1,35 @@
 [mysqld]
+# Configuración general de rendimiento
+innodb_buffer_pool_size = 1G
+innodb_log_file_size = 256M
+innodb_flush_log_at_trx_commit = 1
+innodb_flush_method = O_DIRECT
 innodb_strict_mode = 1
 innodb_file_per_table = ON
+max_connections = 500
+thread_cache_size = 128
 
 # Configuración de replicación para el servidor maestro
-server-id = 1  # Este debe ser único y debe ser diferente a los servidores esclavos
+server-id = 1  # Este debe ser único y diferente a los servidores esclavos
 log_bin = /var/lib/mysql/mysql-bin.log
-binlog_format = row
+binlog_format = ROW
+binlog_row_image = FULL
 max_binlog_size = 100M
 expire_logs_days = 5
+sync_binlog = 1
+gtid_strict_mode = 1
+skip-slave-start
 
-# Otras configuraciones de replicación que puedas necesitar
+# Seguridad
+symbolic-links = 0
+local_infile = 0
+
+# Configuración de caracteres
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+# Logging
+log_error = /var/lib/mysql/error.log
+slow_query_log = 1
+slow_query_log_file = /var/lib/mysql/slow-queries.log
+long_query_time = 2

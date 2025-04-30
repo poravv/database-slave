@@ -14,14 +14,22 @@ services:
     volumes:
       - client1-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my1.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - "3333:3306"
     networks:
       mysql_slaves:
         aliases:
           - client1
+          - master
     hostname: client1
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   client2:
     build:
@@ -37,14 +45,25 @@ services:
     volumes:
       - client2-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my2.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - "3334:3306"
     networks:
       mysql_slaves:
         aliases:
           - client2
+          - slave1
     hostname: client2
     restart: unless-stopped
+    depends_on:
+      client1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   client3:
     build:
@@ -60,14 +79,25 @@ services:
     volumes:
       - client3-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my3.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - "3335:3306"
     networks:
       mysql_slaves:
         aliases:
           - client3
+          - slave2
     hostname: client3
     restart: unless-stopped
+    depends_on:
+      client1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   client4:
     build:
@@ -83,14 +113,25 @@ services:
     volumes:
       - client4-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my4.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - "3336:3306"
     networks:
       mysql_slaves:
         aliases:
           - client4
+          - slave3
     hostname: client4
     restart: unless-stopped
+    depends_on:
+      client1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
 volumes:
   client1-data:
